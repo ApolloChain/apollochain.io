@@ -244,7 +244,7 @@ $(function(){
               $('.box-right .des-wrap').find('p').html(description);
           });
     }
-    setEcharts();
+    // setEcharts();
     function setWidth() {
         var _width = $(window).width();
         if(_width < 705) {
@@ -266,4 +266,51 @@ $(function(){
         
     }
 
+    function countTime() {  
+        //获取当前时间  
+        var date = new Date();  
+        var now = date.getTime();  
+        //设置截止时间  
+        var str = "2018/6/14 00:00:00";
+        var endDate = new Date(str); 
+        var end = endDate.getTime();  
+        
+        //时间差  
+        var leftTime = end-now; 
+        //定义变量 d,h,m,s保存倒计时的时间  
+        var d,h,m,s;  
+        if (leftTime >= 0) {  
+            d = Math.floor(leftTime/1000/60/60/24);  
+            h = Math.floor(leftTime/1000/60/60%24);  
+            m = Math.floor(leftTime/1000/60%60);  
+            s = Math.floor(leftTime/1000%60);                     
+        }  
+        //将倒计时赋值到div中  
+        if(d < 10) {
+            $('.time-wrap .days h3').html('0' + d);
+        }else {
+            $('.time-wrap .days h3').html( d);
+        }
+        if(h < 10) {
+            $('.time-wrap .hours h3').html('0' + h);
+        }else {
+            $('.time-wrap .hours h3').html(h);
+        }
+        if(m < 10) {
+            $('.time-wrap .mins h3').html('0' + m);
+        }else {
+            $('.time-wrap .mins h3').html(m);
+        }
+        if(s < 10) {
+            $('.time-wrap .secs h3').html('0' + s);
+        }else {
+            $('.time-wrap .secs h3').html(s);
+        }
+        
+        //递归每秒调用countTime方法，显示动态时间效果  
+        setTimeout(countTime,1000);  
+
+    }  
+    countTime();
+    setEcharts();
 })
