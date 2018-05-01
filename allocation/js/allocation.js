@@ -42,6 +42,21 @@ $(function(){
         $(".mock").removeClass("show");
     })
 
+    $(".selectBox").click(function(){
+        // $(".selectlist").slideToggle();
+        if($(".selectlist").hasClass("displaynone")){
+            $(".selectlist").removeClass("displaynone");
+        }else{
+            $(".selectlist").addClass("displaynone");
+        }
+    })
+
+    $(".selectlist-li").click(function(){
+        $(".refundadd").hide();
+        var nameStr = ".refundadd" + $(this).index();
+        $(nameStr).show();
+    })
+
     function setEcharts() {
         var dom = document.getElementById("bing-box");
         console.log(3333, dom);
@@ -66,10 +81,10 @@ $(function(){
                   x: 0,
                   y: 10,
                   style: {
-                      image: '',                     
+                      image: '',
                       width: 205,
                       height: 205
-                      
+
                   }
               },
               animationDuration: 0,
@@ -125,7 +140,7 @@ $(function(){
                                     }
 
                                 }
-                            } 
+                            }
                           },
                           {
                               value:10,
@@ -149,7 +164,7 @@ $(function(){
                                     }
 
                                 }
-                            } 
+                            }
                           },
                           {
                               value:15,
@@ -173,10 +188,10 @@ $(function(){
                                         }
 
                                     }
-                                } 
+                                }
                             },
                           {
-                            value:5, 
+                            value:5,
                             name: '5%',
                             title: 'Foundation (5%):',
                             description: 'the project plans to use 5% APL for establishing the APL foundation which has the main role of investing the new energy and blockchain related companies via this portion of APL, with a view to encouraging the R&D and application of the new energy and blockchain industries. APOLLOCHAIN accordingly will continue to foster and shape its business format.',
@@ -221,7 +236,7 @@ $(function(){
                                     }
 
                                 }
-                            }  
+                            }
                           }
                       ]
                   }
@@ -263,29 +278,29 @@ $(function(){
     window.onresize = function(){
         $(".paddingTopX").height($(".navbar").height());
         setWidth()
-        
+
     }
 
-    function countTime() {  
-        //获取当前时间  
-        var date = new Date();  
-        var now = date.getTime();  
-        //设置截止时间  
+    function countTime() {
+        //获取当前时间
+        var date = new Date();
+        var now = date.getTime();
+        //设置截止时间
         var str = "2018/6/14 00:00:00";
-        var endDate = new Date(str); 
-        var end = endDate.getTime();  
-        
-        //时间差  
-        var leftTime = end-now; 
-        //定义变量 d,h,m,s保存倒计时的时间  
-        var d,h,m,s;  
-        if (leftTime >= 0) {  
-            d = Math.floor(leftTime/1000/60/60/24);  
-            h = Math.floor(leftTime/1000/60/60%24);  
-            m = Math.floor(leftTime/1000/60%60);  
-            s = Math.floor(leftTime/1000%60);                     
-        }  
-        //将倒计时赋值到div中  
+        var endDate = new Date(str);
+        var end = endDate.getTime();
+
+        //时间差
+        var leftTime = end-now;
+        //定义变量 d,h,m,s保存倒计时的时间
+        var d,h,m,s;
+        if (leftTime >= 0) {
+            d = Math.floor(leftTime/1000/60/60/24);
+            h = Math.floor(leftTime/1000/60/60%24);
+            m = Math.floor(leftTime/1000/60%60);
+            s = Math.floor(leftTime/1000%60);
+        }
+        //将倒计时赋值到div中
         if(d < 10) {
             $('.time-wrap .days h3').html('0' + d);
         }else {
@@ -306,11 +321,13 @@ $(function(){
         }else {
             $('.time-wrap .secs h3').html(s);
         }
-        
-        //递归每秒调用countTime方法，显示动态时间效果  
-        setTimeout(countTime,1000);  
 
-    }  
+        //递归每秒调用countTime方法，显示动态时间效果
+        setTimeout(countTime,1000);
+
+    }
     countTime();
     setEcharts();
+
+
 })
