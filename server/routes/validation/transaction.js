@@ -12,8 +12,7 @@ exports.createTransaction = {
       // SKY: minimal 10 sky, maximum 1000 sky
       .when('coin', { is: 'sky', then: Joi.number().integer().min(10 * Math.pow(10, 1)).max(1000 * Math.pow(10, 1)) }),
     addr: Joi.string().required(),
-    apl_amount: Joi.number().required(),
     apl_addr: Joi.string().required(),
-    email: Joi.string().email().optional()
+    email: Joi.string().email().required()
   }
 }

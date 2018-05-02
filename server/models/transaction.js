@@ -29,7 +29,7 @@ exports.create = function(coin, amount, addr, apl_amount, apl_addr, email, cb) {
       addr: addr.toLowerCase(),
       apl_amount: apl_amount,
       apl_addr: apl_addr.toLowerCase(),
-      email: email ? email.toLowerCase() : null,
+      email: email.toLowerCase(),
       status: transaction_status.unpaid,
       create_time: new Date()
     };

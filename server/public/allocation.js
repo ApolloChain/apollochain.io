@@ -1,4 +1,6 @@
 $(function(){
+    var transactionId;
+
     // console.log("hello world")
     // let flowPic = document.querySelector(".flow-pic");
     // changeFlowHeight();
@@ -59,6 +61,7 @@ $(function(){
         var slStr = ".s-" + $(this).index();
         $(nameStr).show();
         $(slStr).show();
+        $(".selectBox").attr("data-selected", $(this).attr("data-type"));
         if($(".enterIpt").hasClass("displaynone")){
             $(".enterIpt").show();
         }else{
@@ -69,6 +72,71 @@ $(function(){
     $(".dw-btn").click(function(){
         window.location.href = "http://www.apollochain.io/download.html";
     })
+
+    $(".next-btn").click(function() {
+        $("#buy-step1").hide();
+        $("#buy-step2").show();
+    })
+
+    $(".back-btn").click(function() {
+        $("#buy-step1").show();
+        $("#buy-step2").hide();
+    })
+
+    $(".submit-btn").click(function() {
+        var coin = $(".selectBox").attr("data-selected");
+        var amount = $("#amount").val();
+        if (isNaN(amount)) {
+          alert("Amount of " + coin + " is invalid");
+          return;
+        }
+
+        // update amount because server has different unit for different coins
+        amount = parseFloat(amount);
+        switch (coin) {
+          case "btc":
+          case "eth":
+            amount *= Math.pow(10, 6);
+            break;
+          case "sky":
+            amount *= 10;
+            break;
+          default:
+            alert("unexpected coin type: " + coin);
+            return;
+        }
+
+        var serializedForm = $("#buy-form").serialize();
+        serializedForm += "&coin=" + coin;
+        serializedForm += "&amount=" + amount;
+        $.post("/allocation/api/transactions", serializedForm, function(data, status) {
+          if (status != 'success') {
+            alert("create transaction failed. status is " + status);
+            return;
+          }
+
+          transactionId = data.transactionId;
+
+          $("#buy-step2").hide();
+          $("#buy-step3 .success").hide();
+          $("#buy-step3 .waiting").show();
+          $("#buy-step3").show();
+          setTimeout(checkStatus, 10000);
+        })
+    })
+
+    function checkStatus() {
+        $.get("/allocation/api/transactions/" + transactionId + "/status", function(data, status) {
+          if (data && data.status) {
+            // success
+            $("#buy-step3 .success").show();
+            $("#buy-step3 .waiting").hide();
+          } else {
+            // keep waiting
+            setTimeout(checkStatus, 30000);
+          }
+        });
+    }
 
     function setEcharts() {
         var dom = document.getElementById("bing-box");

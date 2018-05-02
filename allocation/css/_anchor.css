@@ -707,8 +707,12 @@ html,body {
 			background:rgba(58,155,255,1);
 			box-shadow: 0px 10px 20px 0px rgba(71,167,237,0.5);
 			border-radius: 30px ;
+      cursor: pointer;
 		}
 	}
+  #buy-step2, #buy-step3 {
+    display: none;
+  }
 	.blue-wrap {
 		background:linear-gradient(135deg,rgba(74,88,231,1),rgba(12,128,224,1),rgba(12,128,224,1));
 	}
