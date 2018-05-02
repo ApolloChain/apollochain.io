@@ -11,4 +11,4 @@
   npm run pro
 ```
 
-### Publish： Send dist folder to the server
+### Publish： Send "server" folder to the server

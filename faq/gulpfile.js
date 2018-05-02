@@ -51,7 +51,7 @@ gulp.task('watch', () => {
 });
 gulp.task('js:app',() => {
     return gulp.src(['js/faq.js'])
-        .pipe(gulp.dest('./../dist/'));
+        .pipe(gulp.dest('./../server/public/'));
 })
 gulp.task('build', () => {
     return gulp.src(['css/faq.css'])
@@ -65,8 +65,8 @@ gulp.task('build', () => {
 });
 gulp.task('ge', ['build','js:app'], () => {
     gulp.src('images/*')
-        .pipe(gulp.dest('./../dist/images'));
+        .pipe(gulp.dest('./../server/public/images'));
 
     gulp.src('faq.html')
-        .pipe(gulp.dest('./../dist/'));
+        .pipe(gulp.dest('./../server/public/'));
 })
