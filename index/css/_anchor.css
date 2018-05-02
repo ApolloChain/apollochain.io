@@ -321,7 +321,7 @@ html,body {
 	&-btn{
 		display: inline-block;
 		/*width: 262px;*/
-		padding: 0 20px;
+		padding: 0 54px;
 		height: 60px;
 		line-height: 60px;
 		/*background: linear-gradient(-45deg, #3464D5 0%, #23C7FA 100%);*/

@@ -51,10 +51,23 @@ $(function(){
         }
     })
 
+
     $(".selectlist-li").click(function(){
         $(".refundadd").hide();
+        $(".s-letter").hide();
         var nameStr = ".refundadd" + $(this).index();
+        var slStr = ".s-" + $(this).index();
         $(nameStr).show();
+        $(slStr).show();
+        if($(".enterIpt").hasClass("displaynone")){
+            $(".enterIpt").show();
+        }else{
+            $(".enterIpt").hide();
+        }
+    })
+
+    $(".dw-btn").click(function(){
+        window.location.href = "http://www.apollochain.io/download.html";
     })
 
     function setEcharts() {
@@ -91,11 +104,11 @@ $(function(){
               series: [
                   {
                       type:'pie',
-                      radius: ['27%', '70%'],
+                      radius: ['27%', '65%'],
                       avoidLabelOverlap: false,
                       startAngle: 70,
-                      hoverOffset: 30,
-                        selectedOffset: 30,
+                      hoverOffset: 25,
+                      selectedOffset: 25,
                       label: {
                           normal: {
                               show: true,
@@ -245,18 +258,19 @@ $(function(){
           ;
           if (option && typeof option === "object") {
               myChart.setOption(option, true);
+              window.onresize = myChart.resize;
           }
           myChart.on('click', function (params) {
               var title = params.data.title;
               var description = params.data.description;
-              $('.box-right .des-wrap').find('h3').html(title);
-              $('.box-right .des-wrap').find('p').html(description);
+              $('.change-wrap .box-right .des-wrap').find('h3').html(title);
+              $('.change-wrap .box-right .des-wrap').find('p').html(description);
           });
           myChart.on('mouseover', function (params) {
               var title = params.data.title;
               var description = params.data.description;
-              $('.box-right .des-wrap').find('h3').html(title);
-              $('.box-right .des-wrap').find('p').html(description);
+              $('.change-wrap .box-right .des-wrap').find('h3').html(title);
+              $('.change-wrap .box-right .des-wrap').find('p').html(description);
           });
     }
     // setEcharts();
@@ -277,8 +291,7 @@ $(function(){
     setWidth();
     window.onresize = function(){
         $(".paddingTopX").height($(".navbar").height());
-        setWidth()
-
+        // setWidth();
     }
 
     function countTime() {
@@ -328,6 +341,4 @@ $(function(){
     }
     countTime();
     setEcharts();
-
-
 })
