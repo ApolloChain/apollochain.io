@@ -14,6 +14,7 @@ const path = require('path');
 const gulp = require('gulp');
 const postcss = require('gulp-postcss');
 const cssnano = require('gulp-cssnano');
+const rename = require('gulp-rename');
 const scss = require('postcss-scss');
 const minify = require('minify');
 
@@ -68,5 +69,8 @@ gulp.task('ge', ['build','js:app'], () => {
         .pipe(gulp.dest('./../server/public/images'));
 
     gulp.src('allocation.html')
-        .pipe(gulp.dest('./../server/public/'));
+        .pipe(rename({
+          extname: '.ejs'
+        }))
+        .pipe(gulp.dest('./../server/views/'));
 })

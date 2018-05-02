@@ -5,6 +5,10 @@ var transaction = require.main.require('../models/transaction');
 var transactionValidation = require('./validation/transaction');
 var debug = require('debug')('apollochain:debug');
 
+router.get('/', function(req, res, next) {
+  res.render('allocation');
+});
+
 router.post('/api/transactions/', validator(transactionValidation.createTransaction), function(req, res, next) {
   transaction.create(req.body.coin, req.body.amount, req.body.addr, req.body.apl_amount, req.body.apl_addr, req.body.email, function(err, records) {
     if (err) {
