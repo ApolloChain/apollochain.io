@@ -14,7 +14,8 @@ var recaptcha = new Recaptcha(config.recaptcha.site_key, config.recaptcha.secret
 router.get('/', function(req, res, next) {
   let ipBlocked = false;
 
-  let geo = geoip.lookup(req.connection.remoteAddress);
+  let remoteIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+  let geo = geoip.lookup(remoteIp);
   if ((geo && (geo.country == 'CN' || geo.country == 'US')) ||
       req.query.ipBlocked // for test purpose
      ) {
