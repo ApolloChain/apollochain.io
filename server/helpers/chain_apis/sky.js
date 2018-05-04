@@ -30,23 +30,23 @@ exports.update = function(test, cb) {
       if (!data ||
           !data.length ||
           // SKY API doesn't support return transactions in given range,
-          // so if the blockHeight doesn't change, we still think there's no new transactionCs length is 0
-          data[0].status.height == blockHeight
+          // so if the last transaction's hash doesn't change, we still think there's no new transaction
+          // For SKY, we use transaction id as the blockHeight
+          data[data.length - 1].txn.txid == blockHeight
           ) {
-        // don't increase blockHeight here since we need to retry
         chain_apis_helper.updateLatestBlockHeight('sky', blockHeight);
         debug('transaction length is 0');
         return cb(null, 'transaction length is 0');
       }
 
-      let newBlockHeight = data[0].status.height;
-      // increase blockHeight so that we will skip current block height in the future
-      chain_apis_helper.updateLatestBlockHeight('sky', newBlockHeight + 1);
+      let newBlockHeight = data[data.length - 1].txn.txid;
+      // the so-called newBlockHeight is actually transaction id, so we don't +1 for it
+      chain_apis_helper.updateLatestBlockHeight('sky', newBlockHeight);
 
       let foundTran = false;
-      for (let tran_index = 0; tran_index < data.length; tran_index++) {
+      for (let tran_index = data.length - 1; tran_index >= 0; tran_index--) {
         let tran = data[tran_index];
-        if (tran.status.height < blockHeight) {
+        if (tran.txn.txid == blockHeight) {
           // we've checked all new transactions, so break here
           break;
         }
@@ -83,7 +83,8 @@ exports.update = function(test, cb) {
 
                 // check whether the sender sent exact amount of sky
                 let updateRecord = false;
-                for (let record_index = 0; record_index < records.length; record_index++) {
+                // check latest record first
+                for (let record_index = records.length - 1; record_index >= 0; record_index--) {
                   let record = records[record_index];
                   // there's no need to check confirmation here because we won't send coin to user immediately
                   // the unit of input is 1 sky, while the unit of record is 10^(-1) sky

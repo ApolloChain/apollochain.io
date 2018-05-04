@@ -66,7 +66,7 @@ exports.getUnpaidTransactionsByCoinAddr = function(coin_addr, cb) {
   db_helper.connect(function(err, cli, db) {
     if (err) return cb(err);
 
-    db.collection(collection_name).find({addr: coin_addr.toLowerCase(), status: transaction_status.unpaid})
+    db.collection(collection_name).find({addr: coin_addr.toLowerCase(), status: transaction_status.unpaid}).sort({create_time:1})
       .toArray(function(err, result) {
         cli.close();
         cb(err, result);

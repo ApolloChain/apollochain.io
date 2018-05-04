@@ -57,7 +57,8 @@ exports.update = function(test, cb) {
           if (err || !records) return cb(err);
 
           let updateRecord = false;
-          for (let record_index = 0; record_index < records.length; record_index++) {
+          // check latest record first
+          for (let record_index = records.length - 1; record_index >= 0; record_index--) {
             let record = records[record_index];
             // there's no need to check confirmation here because we won't send coin to user immediately
             // the unit of tran is 10^(-18) eth, while the unit of record is 10^(-6) eth
