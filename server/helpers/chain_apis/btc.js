@@ -1,4 +1,4 @@
-const wallet_addr = '1M1knsVb69M78zTH3Dby9Q4PZtcDH7ZeHw';
+const wallet_addr = '1Dm5BqpnLFsjvQqVqKUb7UAcTygJtv2dpQ';
 const test_wallet_addr = 'CE5HED36PtVmX4GXTovJNQeKotMmJn68at';
 const token = '17b57eb9910046258341bc5cdfc7da2c'
 

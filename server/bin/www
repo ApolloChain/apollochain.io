@@ -110,10 +110,7 @@ function taskRun() {
   sky_api.update(false /*test*/, function (err, result) { onChainUpdated('sky', err, result); });
 }
 
-// Update chain data every 30 seconds
+// Update chain data every 60 seconds
 schedule.scheduleJob('0 * * * * *', function(){
-  taskRun();
-});
-schedule.scheduleJob('30 * * * * *', function(){
   taskRun();
 });

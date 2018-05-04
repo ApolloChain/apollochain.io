@@ -1,4 +1,4 @@
-const wallet_addr = 'MbZvwdXHnMUZ1eUFxNDqxPEEHkkffKgq2F';
+const wallet_addr = '2ebrypcicoiiLWiJMAKd1DioEEGvzRELj9m';
 
 const apis = {
   transactions: 'http://127.0.0.1:6420/transactions?addrs=%s&confirmed=1',

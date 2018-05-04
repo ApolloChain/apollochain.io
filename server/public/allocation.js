@@ -14,6 +14,8 @@ function onCaptchaExpired() {
 
 let coinSendCountdownIntervalHandler;
 let coinSendCountdownStopTime;
+let paymentValidationCountdownStopTime;
+let paymentValidationCountdownIntervalHandler;
 
 $(function(){
     var transactionId;
@@ -70,12 +72,15 @@ $(function(){
         if($(this).index() == 0){
             iptStr += 'BTC';
             coinName = "Bitcoin";
+	    $("#our_wallet_addr").val('1Dm5BqpnLFsjvQqVqKUb7UAcTygJtv2dpQ');
         }else if($(this).index() == 1){
             iptStr += 'ETH';
             coinName = "Etherum";
+	    $("#our_wallet_addr").val('0x427F191f02b65339E729705e5d796A2D35262021');
         }else if($(this).index() == 2){
             iptStr += 'SKY';
             coinName = "Skycoin";
+	    $("#our_wallet_addr").val('2ebrypcicoiiLWiJMAKd1DioEEGvzRELj9m');
         }
         currentSelect = selectEnum[$(this).index()];
         $(".enterIpt").attr('placeholder',iptStr)
@@ -130,6 +135,12 @@ $(function(){
             return;
         }
 
+        $(".page-next").hide();
+        $(".page-final .success").hide();
+        $(".page-final .validating").show();
+        $(".page-final").show();
+        $(".loading").show();
+
         var serializedForm = $("#buy-form").serialize();
         serializedForm += "&coin=" + coin;
         serializedForm += "&amount=" + amount;
@@ -140,25 +151,42 @@ $(function(){
           }
 
           transactionId = data.transactionId;
-
-          $(".page-next").hide();
-          $(".page-final .success").hide();
-          $(".page-final .waiting").show();
-          $(".page-final").show();
           setTimeout(checkStatus, 10000);
+          $(".loading").hide();
         })
     })
 
     function checkStatus() {
+        $(".loading").show();
+	$(".page-final .validating .waiting").show();
+	$(".page-final .validating .fail").hide();
         $.get("/allocation/api/transactions/" + transactionId + "/status", function(data, status) {
           if (data && data.status) {
             // success
+            $(".page-final .success .coin_apl_amount_info").text(data.apl_amount);
             $(".page-final .success").show();
-            $(".page-final .waiting").hide();
+            $(".page-final .validating").hide();
           } else {
             // keep waiting
-            setTimeout(checkStatus, 30000);
+            setTimeout(checkStatus, 60000);
+            $(".page-final .validating .waiting").hide();
+            $(".page-final .validating .fail").show();
+            $(".page-final .validating .payment_validation_countdown").text(60);
+            paymentValidationCountdownStopTime = new Date();
+            paymentValidationCountdownStopTime = paymentValidationCountdownStopTime.setMinutes(paymentValidationCountdownStopTime.getMinutes() + 1);
+
+            paymentValidationCountdownIntervalHandler = setInterval(function(){
+                let leftSeconds = Math.floor((paymentValidationCountdownStopTime - new Date()) / 1000);
+                if (leftSeconds >= 0) {
+		    $(".page-final .validating .payment_validation_countdown").text(leftSeconds);
+                } else {
+		    $(".page-final .validating .payment_validation_countdown").text(0);
+		    clearInterval(paymentValidationCountdownIntervalHandler);
+		}
+	    }, 1000);
           }
+
+          $(".loading ").hide();
         });
     }
 
@@ -215,7 +243,7 @@ $(function(){
             coinSendCountdownStopTime = coinSendCountdownStopTime.setMinutes(coinSendCountdownStopTime.getMinutes() + 15);
 
             coinSendCountdownIntervalHandler = setInterval(function(){
-                var leftSeconds = (coinSendCountdownStopTime - new Date()) / 1000;
+                let leftSeconds = (coinSendCountdownStopTime - new Date()) / 1000;
                 if (leftSeconds >= 0) {
                     $(".coin_send_countdown_mins").text(Math.floor(leftSeconds / 60));
                     $(".coin_send_countdown_secs").text(Math.floor(leftSeconds % 60));
@@ -289,7 +317,7 @@ $(function(){
         // setTimeout(function(){
         //     $(".confirm-mock").hide();
         // },2000)
-        $(".loading").show();
+        // $(".loading").show();
     })
 
     //同意合约

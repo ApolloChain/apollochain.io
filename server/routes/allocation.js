@@ -74,7 +74,8 @@ router.get('/api/transactions/:transaction_id/status', function(req, res, next) 
     }
 
     res.status(200).send({
-      status: transaction.status
+      status: transaction.status,
+      apl_amount: transaction.apl_amount
     })
   });
 });
