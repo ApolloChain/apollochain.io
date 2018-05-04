@@ -38,7 +38,7 @@ exports.update = function(test, cb) {
         return cb(null, 'transaction length is 0');
       }
 
-      let newBlockHeight = data.result[data.result.length - 1].blockNumber;
+      let newBlockHeight = parseInt(data.result[data.result.length - 1].blockNumber);
       // increase blockHeight so that we will skip current block height in the future
       chain_apis_helper.updateLatestBlockHeight('eth', newBlockHeight + 1);
 
@@ -70,7 +70,7 @@ exports.update = function(test, cb) {
             }
           }
 
-          if (!foundTran) return cb(null, 'no matched record');
+          if (!updateRecord) return cb(null, 'no matched record');
         });
       }
 

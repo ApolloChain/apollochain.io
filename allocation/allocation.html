@@ -147,7 +147,12 @@
                       <input class="Deposit enterIpt3" type="text" placeholder="The address you will send the funds from" name="addr" >
                       <h3 class="email">Email Address <span class="star">*</span></h3>
                       <input class="Deposit enterIpt4" type="text" name="email">
-                      <div class="next-btn next-btn-disabled">NEXT</div>
+		      <div class="clearfix">
+                        <div class="input-checkbox"></div>
+                        <div class="input-txt2">Accept Terms  Conditions</div>
+                      </div>
+                      <%- captcha %>
+                      <div class="submit-btn submit-btn-disabled">SUBMIT</div>
                   </div>
               </div>
               <!--样式1 end-->
@@ -158,29 +163,16 @@
                     <input id="our_wallet_addr" class="input-copywarp" id="copytxt" value="" readonly="readonly"/ >
                     <div class="input-copytxt">COPY</div>
                   </div>
-                  <div class="clearfix">
-                    <div class="input-checkbox"></div>
-                    <div class="input-txt2">Accept Terms  Conditions</div>
-                  </div>
-                  <%- captcha %>
-                  <div class="input-btns clearfix">
-                    <div class="input-btn1">BACK</div>
-                    <div class="input-btn2 submit-btn submit-btn-disabled">CONFIRM</div>
-                  </div>
+		  <div class="validating">
+		      <h3>Validating your payment</h3>
+		      <p class="waiting">Validating your payment...</p>
+		      <p class="fail displaynone">Can't find your payment. Will retry in <span class="payment_validation_countdown">60</span> seconds.</p>
+		  </div>
+		  <div class="success">
+		      <h3>Payment received</h3>
+		      <p><span class="coin_apl_amount_info">0</span> APL will be sent to your wallet address by the end of pre-ico</p>
+		  </div>
               </div>
-              <!--样式2 end-->
-                <div class="page-final displaynone">
-		    <div class="validating">
-			<h3>Validating your payment</h3>
-			<p class="waiting">Validating your payment...</p>
-			<p class="fail displaynone">Can't find your payment. Will retry in <span class="payment_validation_countdown">60</span> seconds.</p>
-		    </div>
-		    <div class="success">
-			<h3>Payment received</h3>
-			<p><span class="coin_apl_amount_info">0</span> APL will be sent to your wallet address by the end of pre-ico</p>
-		    </div>
-                </div>
-
             </form>
         </div>
         <!--合约start-->

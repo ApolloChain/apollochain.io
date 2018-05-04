@@ -3,13 +3,11 @@ const test_wallet_addr = 'CE5HED36PtVmX4GXTovJNQeKotMmJn68at';
 const token = '17b57eb9910046258341bc5cdfc7da2c'
 
 const apis = {
-  chain: 'https://api.blockcypher.com/v1/btc/main?token=%s',
   addr_full: 'https://api.blockcypher.com/v1/btc/main/addrs/%s/full?after=%d&token=%s'
 }
 
 // use bcwallet to get test coins
 const test_apis = {
-  chain: 'https://api.blockcypher.com/v1/bcy/test?token=%s',
   addr_full: 'https://api.blockcypher.com/v1/bcy/test/addrs/%s/full?after=%d&token=%s'
 }
 
@@ -24,9 +22,7 @@ function getWalletAddr(test) {
 }
 
 exports.update = function(test, cb) {
-  let chain_url = util.format(test ? test_apis.chain : apis.chain, token);
-  debug('The chain url is "' + chain_url + '"');
-  chain_apis_helper.getLastCheckedBlockHeight('btc', chain_url, function(err, blockHeight) {
+  chain_apis_helper.getLastCheckedBlockHeight('btc', null, function(err, blockHeight) {
     if (err) return cb(err);
 
     debug('get latest transactions happended on our wallet');

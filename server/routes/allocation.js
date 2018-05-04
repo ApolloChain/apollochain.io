@@ -39,15 +39,16 @@ router.post('/api/transactions/', validator(transactionValidation.createTransact
 
     let amount = Long.fromInt(req.body.amount);
     let apl_amount;
+    //  convert according to the unit defined in database
     switch (req.body.coin) {
       case 'btc':
-        apl_amount = amount.multiply(Long.fromInt(33000));
+        apl_amount = amount.multiply(Long.fromInt(33000)).div(Long.fromInt(Math.pow(10, 6)));
         break;
       case 'eth':
-        apl_amount = amount.multiply(Long.fromInt(2300));
+        apl_amount = amount.multiply(Long.fromInt(2300)).div(Long.fromInt(Math.pow(10, 6)));
         break;
       case 'sky':
-        apl_amount = amount.multiply(Long.fromInt(85));
+        apl_amount = amount.multiply(Long.fromInt(85)).div(Long.fronInt(10));
         break;
       default:
         // we should not hit this case since we have verified paramter

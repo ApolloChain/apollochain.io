@@ -1,15 +1,57 @@
 let captchaPassed = false;
-let contractAccepted = false;
 function onCaptchaPassed() {
     captchaPassed = true;
-    if (captchaPassed && contractAccepted) {
-        $(".submit-btn").removeClass("submit-btn-disabled");
-    }
+    validateAllFields();
 }
 
 function onCaptchaExpired() {
     captchaPassed = false;
-    $(".submit-btn").addClass("submit-btn-disabled");
+    validateAllFields();
+}
+
+function validateRequiredField(selector, value) {
+  if (value) {
+    $(selector).removeClass("invalid");
+  } else {
+    $(selector).addClass("invalid");
+  }
+}
+
+function validateEmail(email) {
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+}
+
+
+function validateAllFields() {
+    var s = $(".enterIpt").val(),
+        s1 = $(".enterIpt1").html(),
+        s2 = $(".enterIpt2").val(),
+        s3 = $(".enterIpt3").val(),
+        s4 = $(".enterIpt4").val();
+
+    validateRequiredField(".enterIpt", s);
+    validateRequiredField(".enterIpt1", s1);
+    validateRequiredField(".enterIpt2", s2);
+    validateRequiredField(".enterIpt3", s3);
+    validateRequiredField(".enterIpt4", s4);
+
+    var emailValid = validateEmail(s4);
+    if (!emailValid){
+      $(".enterIpt4").addClass("invalid");
+    }else{
+      $(".enterIpt4").removeClass("invalid");
+    }
+
+    var contractAccepted = $(".input-checkbox").hasClass("input-checkbox-checked");
+
+    if(s && s1 && s2 && s3 && s4 && emailValid && contractAccepted && captchaPassed){
+        $(".submit-btn").removeClass("submit-btn-disabled");
+	return true;
+    }else{
+        $(".submit-btn").addClass("submit-btn-disabled");
+	return false;
+    }
 }
 
 let coinSendCountdownIntervalHandler;
@@ -99,20 +141,7 @@ $(function(){
         window.location.href = "http://www.apollochain.io/download.html";
     })
 
-		function validateEmail(email) {
-			var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-			return re.test(String(email).toLowerCase());
-		}
-
-    function validateRequiredField(selector, value) {
-      if (value) {
-        $(selector).removeClass("invalid");
-      } else {
-        $(selector).addClass("invalid");
-      }
-    }
-
-    $(".submit-btn").click(function() {
+    function postRequest() {
         var coin = $(".selectBox").attr("data-selected");
         var amount = $("#amount").val();
         if (isNaN(amount)) {
@@ -135,10 +164,9 @@ $(function(){
             return;
         }
 
-        $(".page-next").hide();
-        $(".page-final .success").hide();
-        $(".page-final .validating").show();
-        $(".page-final").show();
+        $(".page-next .success").hide();
+        $(".page-next .validating").show();
+        $(".page-next").show();
         $(".loading").show();
 
         var serializedForm = $("#buy-form").serialize();
@@ -154,33 +182,33 @@ $(function(){
           setTimeout(checkStatus, 10000);
           $(".loading").hide();
         })
-    })
+    }
 
     function checkStatus() {
         $(".loading").show();
-	$(".page-final .validating .waiting").show();
-	$(".page-final .validating .fail").hide();
+	$(".page-next .validating .waiting").show();
+	$(".page-next .validating .fail").hide();
         $.get("/allocation/api/transactions/" + transactionId + "/status", function(data, status) {
           if (data && data.status) {
             // success
-            $(".page-final .success .coin_apl_amount_info").text(data.apl_amount);
-            $(".page-final .success").show();
-            $(".page-final .validating").hide();
+            $(".page-next .success .coin_apl_amount_info").text(data.apl_amount);
+            $(".page-next .success").show();
+            $(".page-next .validating").hide();
           } else {
             // keep waiting
             setTimeout(checkStatus, 60000);
-            $(".page-final .validating .waiting").hide();
-            $(".page-final .validating .fail").show();
-            $(".page-final .validating .payment_validation_countdown").text(60);
+            $(".page-next .validating .waiting").hide();
+            $(".page-next .validating .fail").show();
+            $(".page-next .validating .payment_validation_countdown").text(60);
             paymentValidationCountdownStopTime = new Date();
             paymentValidationCountdownStopTime = paymentValidationCountdownStopTime.setMinutes(paymentValidationCountdownStopTime.getMinutes() + 1);
 
             paymentValidationCountdownIntervalHandler = setInterval(function(){
                 let leftSeconds = Math.floor((paymentValidationCountdownStopTime - new Date()) / 1000);
                 if (leftSeconds >= 0) {
-		    $(".page-final .validating .payment_validation_countdown").text(leftSeconds);
+		    $(".page-next .validating .payment_validation_countdown").text(leftSeconds);
                 } else {
-		    $(".page-final .validating .payment_validation_countdown").text(0);
+		    $(".page-next .validating .payment_validation_countdown").text(0);
 		    clearInterval(paymentValidationCountdownIntervalHandler);
 		}
 	    }, 1000);
@@ -188,33 +216,6 @@ $(function(){
 
           $(".loading ").hide();
         });
-    }
-
-    function validateAllFields() {
-        var s = $(".enterIpt").val(),
-            s1 = $(".enterIpt1").html(),
-            s2 = $(".enterIpt2").val(),
-            s3 = $(".enterIpt3").val(),
-            s4 = $(".enterIpt4").val();
-
-        validateRequiredField(".enterIpt", s);
-        validateRequiredField(".enterIpt1", s1);
-        validateRequiredField(".enterIpt2", s2);
-        validateRequiredField(".enterIpt3", s3);
-        validateRequiredField(".enterIpt4", s4);
-
-        var emailValid = validateEmail(s4);
-        if (!emailValid){
-          $(".enterIpt4").addClass("invalid");
-        }else{
-          $(".enterIpt4").removeClass("invalid");
-        }
-
-        if(s && s1 && s2 && s3 && s4 && emailValid){
-            $(".next-btn").removeClass("next-btn-disabled");
-        }else{
-            $(".next-btn").addClass("next-btn-disabled");
-        }
     }
 
     $(".Deposit").blur(function(){
@@ -229,14 +230,8 @@ $(function(){
 	validateAllFields();
     })
 
-    $(".next-btn").click(function(){
-        var s = $(".enterIpt").val(),
-            s1 = $(".enterIpt1").html(),
-            s2 = $(".enterIpt2").val(),
-            s3 = $(".enterIpt3").val(),
-            s4 = $(".enterIpt4").val();
-
-        if(s && s1 && s2 && s3 && s4){
+    $(".submit-btn").click(function(){
+        if(validateAllFields()){
             $(".coin_send_countdown_mins").text(14);
             $(".coin_send_countdown_secs").text(59);
             coinSendCountdownStopTime = new Date();
@@ -256,8 +251,10 @@ $(function(){
 
             $(".page-next").show();
             $(".page-prev").hide();
+
+            postRequest();
         }else{
-            $(".next-btn").addClass("next-btn-disabled");
+            $(".submit-btn").addClass("submit-btn-disabled");
         }
     })
 
@@ -323,16 +320,11 @@ $(function(){
     //同意合约
     $(".input-checkbox").click(function(){
         if($(this).hasClass("input-checkbox-checked")){
-            $(this).removeClass("input-checkbox-checked")
-			contractAccepted = false;
-			$(".submit-btn").addClass("submit-btn-disabled");
-		}else{
-			$(this).addClass("input-checkbox-checked")
-			contractAccepted = true;
-			if (captchaPassed && contractAccepted) {
-				$(".submit-btn").removeClass("submit-btn-disabled");
-			}
-		}
+            $(this).removeClass("input-checkbox-checked");
+	}else{
+    	    $(this).addClass("input-checkbox-checked");
+	}
+        validateAllFields();
     })
 
     //复制
