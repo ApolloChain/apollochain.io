@@ -1,3 +1,12 @@
+let captchaPassed = false;
+let contractAccepted = false;
+function onCaptchaPassed() {
+	captchaPassed = true;
+	if (captchaPassed && contractAccepted) {
+		$(".submit-btn").removeClass("submit-btn-disabled");
+	}
+}
+
 $(function(){
     var transactionId;
 
@@ -139,11 +148,7 @@ $(function(){
         });
     }
 
-    $(".Deposit").blur(function(){
-        if($(this).hasClass("enterIpt")){
-            var n = $(".enterIpt").val() * (currentSelect.exchange)
-            $(".enterIpt1").html(n)
-        }
+    function validateAllFields() {
         var s = $(".enterIpt").val(),
             s1 = $(".enterIpt1").html(),
             s2 = $(".enterIpt2").val(),
@@ -168,6 +173,18 @@ $(function(){
         }else{
             $(".next-btn").addClass("next-btn-disabled");
         }
+    }
+
+    $(".Deposit").blur(function(){
+        if($(this).hasClass("enterIpt")){
+            var n = $(".enterIpt").val() * (currentSelect.exchange)
+            $(".enterIpt1").html(n)
+        }
+	validateAllFields();
+    })
+
+    $(".enterIpt4").on("input", function() {
+	validateAllFields();
     })
 
     $(".next-btn").click(function(){
@@ -248,9 +265,15 @@ $(function(){
     $(".input-checkbox").click(function(){
         if($(this).hasClass("input-checkbox-checked")){
             $(this).removeClass("input-checkbox-checked")
-        }else{
-            $(this).addClass("input-checkbox-checked")
-        }
+			contractAccepted = false;
+			$(".submit-btn").addClass("submit-btn-disabled");
+		}else{
+			$(this).addClass("input-checkbox-checked")
+			contractAccepted = true;
+			if (captchaPassed && contractAccepted) {
+				$(".submit-btn").removeClass("submit-btn-disabled");
+			}
+		}
     })
 
     //复制

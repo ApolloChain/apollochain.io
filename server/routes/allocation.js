@@ -9,7 +9,9 @@ var Recaptcha = require('express-recaptcha').Recaptcha;
 var config = require.main.require('../config');
 var Long = require('mongodb').Long;
 
-var recaptcha = new Recaptcha(config.recaptcha.site_key, config.recaptcha.secret_key);
+var recaptcha = new Recaptcha(config.recaptcha.site_key, config.recaptcha.secret_key, {
+  callback: 'onCaptchaPassed'
+});
 
 router.get('/', function(req, res, next) {
   let ipBlocked = false;
