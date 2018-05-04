@@ -1,32 +1,6 @@
 $(function(){
     var transactionId;
 
-    // console.log("hello world")
-    // let flowPic = document.querySelector(".flow-pic");
-    // changeFlowHeight();
-    //
-    // window.onresize = function(){
-    //     changeFlowHeight();
-    // }
-    //
-    // function changeFlowHeight(){
-    //     flowPic.style.height = (flowPic.offsetWidth)*403/1160 + "px";
-    // }
-
-    // $(window).scroll(function(event){
-    //     if($(window).scrollTop() < 300){
-    //         if($(".navbar").hasClass("navbar-light")){
-    //             $(".navbar").addClass("navbar-dark").removeClass("navbar-light");
-    //         }
-    //     }else{
-    //         if($(".navbar").hasClass("navbar-dark")){
-    //             $(".navbar").addClass("navbar-light").removeClass("navbar-dark");
-    //         }
-    //     }
-    //
-    //
-    // });
-
     $(".paddingTopX").height($(".navbar").height());
 
     $(".navbar-slideShow").on("click",function(){
@@ -52,18 +26,42 @@ $(function(){
             $(".selectlist").addClass("displaynone");
         }
     })
-
-
+    var selectEnum = [
+        {
+            "type":"BTC",
+            "exchange":33000
+        },
+        {
+            "type":"ETH",
+            "exchange":2300
+        },
+        {
+            "type":"SKY",
+            "exchange":85
+        },
+    ]
+    var currentSelect;
     $(".selectlist-li").click(function(){
         $(".refundadd").hide();
         $(".s-letter").hide();
         var nameStr = ".refundadd" + $(this).index();
         var slStr = ".s-" + $(this).index();
+        var iptStr = "Enter amount in ";
         $(nameStr).show();
         $(slStr).show();
         $(".selectBox").attr("data-selected", $(this).attr("data-type"));
+        if($(this).index() == 0){
+            iptStr += 'BTC';
+        }else if($(this).index() == 1){
+            iptStr += 'ETH';
+        }else if($(this).index() == 2){
+            iptStr += 'SKY';
+        }
+        currentSelect = selectEnum[$(this).index()];
+        $(".enterIpt").attr('placeholder',iptStr)
         if($(".enterIpt").hasClass("displaynone")){
             $(".enterIpt").show();
+            $(".selectNext").show();
         }else{
             $(".enterIpt").hide();
         }
@@ -71,16 +69,6 @@ $(function(){
 
     $(".dw-btn").click(function(){
         window.location.href = "http://www.apollochain.io/download.html";
-    })
-
-    $(".next-btn").click(function() {
-        $("#buy-step1").hide();
-        $("#buy-step2").show();
-    })
-
-    $(".back-btn").click(function() {
-        $("#buy-step1").show();
-        $("#buy-step2").hide();
     })
 
     $(".submit-btn").click(function() {
@@ -137,6 +125,76 @@ $(function(){
           }
         });
     }
+
+    $(".Deposit").blur(function(){
+        if($(this).hasClass("enterIpt")){
+            var n = $(".enterIpt").val() * (currentSelect.exchange)
+            $(".enterIpt1").html(n)
+        }
+        var s = $(".enterIpt").val(),
+            s1 = $(".enterIpt1").html(),
+            s2 = $(".enterIpt2").val(),
+            s3 = $(".enterIpt3").val(),
+            s4 = $(".enterIpt4").val();
+
+        if(s && s1 && s2 && s3 && s4){
+            $(".next-btn").removeClass("next-btn-disabled");
+        }else{
+            $(".next-btn").addClass("next-btn-disabled");
+        }
+    })
+
+    $(".next-btn").click(function(){
+        var s = $(".enterIpt").val(),
+            s1 = $(".enterIpt1").html(),
+            s2 = $(".enterIpt2").val(),
+            s3 = $(".enterIpt3").val(),
+            s4 = $(".enterIpt4").val();
+
+        if(s && s1 && s2 && s3 && s4){
+            $(".page-next").show();
+            $(".page-prev").hide();
+        }else{
+            $(".next-btn").addClass("next-btn-disabled");
+        }
+    })
+
+    $(".input-btn1").click(function(){
+        $(".page-next").hide();
+        $(".page-prev").show();
+    })
+
+    $(".input-btn2").click(function(){
+        // $(".confirm-mock").show();
+        // setTimeout(function(){
+        //     $(".confirm-mock").hide();
+        // },2000)
+        $(".loading").show();
+    })
+
+    //同意合约
+    $(".input-checkbox").click(function(){
+        if($(this).hasClass("input-checkbox-checked")){
+            $(this).removeClass("input-checkbox-checked")
+        }else{
+            $(this).addClass("input-checkbox-checked")
+        }
+    })
+
+    //复制
+    $(".input-copytxt").click(function(){
+        var Url2=document.getElementById("copytxt");
+        Url2.select(); // 选择对象
+        document.execCommand("Copy");
+    })
+
+    //合约
+    $(".contract-btn").click(function(){
+        $(".contract-mock").hide();
+    })
+    $(".input-txt2").click(function(){
+        $(".contract-mock").show();
+    })
 
     function setEcharts() {
         var dom = document.getElementById("bing-box");
@@ -409,4 +467,40 @@ $(function(){
     }
     countTime();
     setEcharts();
+
+
 })
+
+
+function checkDeposit() {
+
+    //1,检查当前选择的类型
+    var type;
+    $(".selectBox p").each(function () {
+        if(!$(this).is(":hidden")){
+            type=$(this).html();
+        }
+    });
+
+    //2,判断区间是否合法
+    var value=$(".enterIpt").val();
+    if(type==="Bitcoin"){
+        if(value<0.1){
+            console.log("Accept at least 0.1")
+        }else if(value>10){
+            console.log("Accept at most 10")
+        }
+    }else if(type==="Ethereum"){
+        if(value<1){
+            console.log("Accept at least 1")
+        }else if(value>100){
+            console.log("Accept at most 100")
+        }
+    }else if(tpye==="Skycoin"){
+        if(value<10){
+            console.log("Accept at least 10")
+        }else if(value>1000){
+            console.log("Accept at most 1000")
+        }
+    }
+}
