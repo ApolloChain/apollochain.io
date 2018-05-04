@@ -1,5 +1,5 @@
 const wallet_addr = '0x427F191f02b65339E729705e5d796A2D35262021';
-const token = '6QPSNWGIVW93KUNZZDJP72S3K73XK5RVM3';
+const token = 'NJUEBEU83FJTKNJUKNZ4MMF45RZDJWRNIC';
 
 const apis = {
   account_normal_transaction: 'https://api.etherscan.io/api?module=account&action=txlist&address=%s&startblock=%d&endblock=99999999&sort=asc&apikey=%s'

@@ -1,6 +1,6 @@
 const wallet_addr = '1Dm5BqpnLFsjvQqVqKUb7UAcTygJtv2dpQ';
 const test_wallet_addr = 'CE5HED36PtVmX4GXTovJNQeKotMmJn68at';
-const token = '17b57eb9910046258341bc5cdfc7da2c'
+const token = 'b4571d304c10437fbfe8f088243464c4'
 
 const apis = {
   addr_full: 'https://api.blockcypher.com/v1/btc/main/addrs/%s/full?after=%d&token=%s'

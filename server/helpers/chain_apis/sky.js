@@ -1,8 +1,8 @@
 const wallet_addr = '2ebrypcicoiiLWiJMAKd1DioEEGvzRELj9m';
 
 const apis = {
-  transactions: 'http://127.0.0.1:6420/transactions?addrs=%s&confirmed=1',
-  uxouts: 'http://127.0.0.1:6420/uxout?uxid=%s'
+  transactions: 'http://13.210.32.145:6420/transactions?addrs=%s&confirmed=1',
+  uxouts: 'http://13.210.32.145:6420/uxout?uxid=%s'
 }
 
 var util = require('util');
