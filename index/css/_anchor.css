@@ -86,6 +86,13 @@ html,body {
     animation-fill-mode: both;
 }
 
+.rounded-blue {
+	animation-duration: 1s;
+    animation-fill-mode: both;
+	background-color: #509cfb;
+	border-radius: 12px;
+}
+
 .navbar-fixed{
 	position: fixed;
 	top:0;
