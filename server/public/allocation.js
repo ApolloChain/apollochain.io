@@ -223,6 +223,7 @@ $(function(){
             var n = $(".enterIpt").val() * (currentSelect.exchange)
             $(".enterIpt1").html(n)
         }
+        $(".refund_addr").text($(".enterIpt3").val());
 	validateAllFields();
     })
 
@@ -270,7 +271,7 @@ $(function(){
         "decimalDigits": 6
       },
       "sky":  {
-        "min": 10,
+        "min": 1,
         "max": 1000,
         "decimalDigits": 1
       }
@@ -643,7 +644,7 @@ function checkDeposit() {
             console.log("Accept at most 100")
         }
     }else if(type==="Skycoin"){
-        if(value<10){
+        if(value<1){
             console.log("Accept at least 10")
         }else if(value>1000){
             console.log("Accept at most 1000")

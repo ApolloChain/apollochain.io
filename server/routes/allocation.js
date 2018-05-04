@@ -48,7 +48,7 @@ router.post('/api/transactions/', validator(transactionValidation.createTransact
         apl_amount = amount.multiply(Long.fromInt(2300)).div(Long.fromInt(Math.pow(10, 6)));
         break;
       case 'sky':
-        apl_amount = amount.multiply(Long.fromInt(85)).div(Long.fronInt(10));
+        apl_amount = amount.multiply(Long.fromInt(85)).div(Long.fromInt(10));
         break;
       default:
         // we should not hit this case since we have verified paramter

@@ -223,6 +223,7 @@ $(function(){
             var n = $(".enterIpt").val() * (currentSelect.exchange)
             $(".enterIpt1").html(n)
         }
+        $(".refund_addr").text($(".enterIpt3").val());
 	validateAllFields();
     })
 
