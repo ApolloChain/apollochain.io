@@ -1,4 +1,66 @@
+let captchaPassed = false;
+function onCaptchaPassed() {
+    captchaPassed = true;
+    validateAllFields();
+}
+
+function onCaptchaExpired() {
+    captchaPassed = false;
+    validateAllFields();
+}
+
+function validateRequiredField(selector, value) {
+  if (value) {
+    $(selector).removeClass("invalid");
+  } else {
+    $(selector).addClass("invalid");
+  }
+}
+
+function validateEmail(email) {
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+}
+
+
+function validateAllFields() {
+    var s = $(".enterIpt").val(),
+        s1 = $(".enterIpt1").html(),
+        s2 = $(".enterIpt2").val(),
+        s3 = $(".enterIpt3").val(),
+        s4 = $(".enterIpt4").val();
+
+    validateRequiredField(".enterIpt", s);
+    validateRequiredField(".enterIpt1", s1);
+    validateRequiredField(".enterIpt2", s2);
+    validateRequiredField(".enterIpt3", s3);
+    validateRequiredField(".enterIpt4", s4);
+
+    var emailValid = validateEmail(s4);
+    if (!emailValid){
+      $(".enterIpt4").addClass("invalid");
+    }else{
+      $(".enterIpt4").removeClass("invalid");
+    }
+
+    var contractAccepted = $(".input-checkbox").hasClass("input-checkbox-checked");
+
+    if(s && s1 && s2 && s3 && s4 && emailValid && contractAccepted && captchaPassed){
+        $(".submit-btn").removeClass("submit-btn-disabled");
+	return true;
+    }else{
+        $(".submit-btn").addClass("submit-btn-disabled");
+	return false;
+    }
+}
+
+let coinSendCountdownIntervalHandler;
+let coinSendCountdownStopTime;
+let paymentValidationCountdownStopTime;
+let paymentValidationCountdownIntervalHandler;
+
 $(function(){
+    var transactionId;
 
     $(".paddingTopX").height($(".navbar").height());
 
@@ -48,58 +110,199 @@ $(function(){
         var iptStr = "Enter amount in ";
         $(nameStr).show();
         $(slStr).show();
+        var coinName;
         if($(this).index() == 0){
             iptStr += 'BTC';
+            coinName = "Bitcoin";
+	    $("#our_wallet_addr").val('1Dm5BqpnLFsjvQqVqKUb7UAcTygJtv2dpQ');
         }else if($(this).index() == 1){
             iptStr += 'ETH';
+            coinName = "Etherum";
+	    $("#our_wallet_addr").val('0x427F191f02b65339E729705e5d796A2D35262021');
         }else if($(this).index() == 2){
             iptStr += 'SKY';
+            coinName = "Skycoin";
+	    $("#our_wallet_addr").val('2ebrypcicoiiLWiJMAKd1DioEEGvzRELj9m');
         }
         currentSelect = selectEnum[$(this).index()];
         $(".enterIpt").attr('placeholder',iptStr)
+        $(".selectBox").attr("data-selected", $(this).attr("data-type"));
         if($(".enterIpt").hasClass("displaynone")){
             $(".enterIpt").show();
             $(".selectNext").show();
         }else{
             $(".enterIpt").hide();
         }
+
+	$(".coin_name_info").text(coinName);
     })
 
     $(".dw-btn").click(function(){
         window.location.href = "http://www.apollochain.io/download.html";
     })
 
+    function postRequest() {
+        var coin = $(".selectBox").attr("data-selected");
+        var amount = $("#amount").val();
+        if (isNaN(amount)) {
+          alert("Amount of " + coin + " is invalid");
+          return;
+        }
+
+        // update amount because server has different unit for different coins
+        amount = parseFloat(amount);
+        switch (coin) {
+          case "btc":
+          case "eth":
+            amount *= Math.pow(10, 6);
+            break;
+          case "sky":
+            amount *= 10;
+            break;
+          default:
+            alert("unexpected coin type: " + coin);
+            return;
+        }
+
+        $(".page-next .success").hide();
+        $(".page-next .validating").show();
+        $(".page-next").show();
+        $(".loading").show();
+
+        var serializedForm = $("#buy-form").serialize();
+        serializedForm += "&coin=" + coin;
+        serializedForm += "&amount=" + amount;
+        $.post("/allocation/api/transactions", serializedForm, function(data, status) {
+          if (status != 'success') {
+            alert("create transaction failed. status is " + status);
+            return;
+          }
+
+          transactionId = data.transactionId;
+          setTimeout(checkStatus, 10000);
+          $(".loading").hide();
+        })
+    }
+
+    function checkStatus() {
+        $(".loading").show();
+	$(".page-next .validating .waiting").show();
+	$(".page-next .validating .fail").hide();
+        $.get("/allocation/api/transactions/" + transactionId + "/status", function(data, status) {
+          if (data && data.status) {
+            // success
+            $(".page-next .success .coin_apl_amount_info").text(data.apl_amount);
+            $(".page-next .success").show();
+            $(".page-next .validating").hide();
+          } else {
+            // keep waiting
+            setTimeout(checkStatus, 60000);
+            $(".page-next .validating .waiting").hide();
+            $(".page-next .validating .fail").show();
+            $(".page-next .validating .payment_validation_countdown").text(60);
+            paymentValidationCountdownStopTime = new Date();
+            paymentValidationCountdownStopTime = paymentValidationCountdownStopTime.setMinutes(paymentValidationCountdownStopTime.getMinutes() + 1);
+
+            paymentValidationCountdownIntervalHandler = setInterval(function(){
+                let leftSeconds = Math.floor((paymentValidationCountdownStopTime - new Date()) / 1000);
+                if (leftSeconds >= 0) {
+		    $(".page-next .validating .payment_validation_countdown").text(leftSeconds);
+                } else {
+		    $(".page-next .validating .payment_validation_countdown").text(0);
+		    clearInterval(paymentValidationCountdownIntervalHandler);
+		}
+	    }, 1000);
+          }
+
+          $(".loading ").hide();
+        });
+    }
+
     $(".Deposit").blur(function(){
         if($(this).hasClass("enterIpt")){
             var n = $(".enterIpt").val() * (currentSelect.exchange)
             $(".enterIpt1").html(n)
         }
-        var s = $(".enterIpt").val(),
-            s1 = $(".enterIpt1").html(),
-            s2 = $(".enterIpt2").val(),
-            s3 = $(".enterIpt3").val(),
-            s4 = $(".enterIpt4").val();
+        $(".refund_addr").text($(".enterIpt3").val());
+	validateAllFields();
+    })
 
-        if(s && s1 && s2 && s3 && s4){
-            $(".next-btn").removeClass("next-btn-disabled");
+    $(".enterIpt4").on("input", function() {
+	validateAllFields();
+    })
+
+    $(".submit-btn").click(function(){
+        if(validateAllFields()){
+            $(".coin_send_countdown_mins").text(14);
+            $(".coin_send_countdown_secs").text(59);
+            coinSendCountdownStopTime = new Date();
+            coinSendCountdownStopTime = coinSendCountdownStopTime.setMinutes(coinSendCountdownStopTime.getMinutes() + 15);
+
+            coinSendCountdownIntervalHandler = setInterval(function(){
+                let leftSeconds = (coinSendCountdownStopTime - new Date()) / 1000;
+                if (leftSeconds >= 0) {
+                    $(".coin_send_countdown_mins").text(Math.floor(leftSeconds / 60));
+                    $(".coin_send_countdown_secs").text(Math.floor(leftSeconds % 60));
+                } else {
+                    $(".coin_send_countdown_mins").text(0);
+                    $(".coin_send_countdown_secs").text(0);
+		    clearInterval(coinSendCountdownIntervalHandler);
+		}
+	    }, 1000);
+
+            $(".page-next").show();
+            $(".page-prev").hide();
+
+            postRequest();
         }else{
-            $(".next-btn").addClass("next-btn-disabled");
+            $(".submit-btn").addClass("submit-btn-disabled");
         }
     })
 
-    $(".next-btn").click(function(){
-        var s = $(".enterIpt").val(),
-            s1 = $(".enterIpt1").html(),
-            s2 = $(".enterIpt2").val(),
-            s3 = $(".enterIpt3").val(),
-            s4 = $(".enterIpt4").val();
+    const validCoinAmountRange = {
+      "btc":  {
+        "min": 0.1,
+        "max": 10,
+        "decimalDigits": 6
+      },
+      "eth":  {
+        "min": 1,
+        "max": 100,
+        "decimalDigits": 6
+      },
+      "sky":  {
+        "min": 1,
+        "max": 1000,
+        "decimalDigits": 1
+      }
+    }
 
-        if(s && s1 && s2 && s3 && s4){
-            $(".page-next").show();
-            $(".page-prev").hide();
-        }else{
-            $(".next-btn").addClass("next-btn-disabled");
-        }
+    $("#amount").change(function() {
+      let amountDOM = $("#amount");
+      let val = amountDOM.val();
+      let coin = $(".selectBox").attr("data-selected");
+
+      let minValidAmount = validCoinAmountRange[coin]["min"];
+      if (isNaN(val)) {
+        val = minValidAmount;
+      }
+
+      val = parseFloat(val);
+
+      if (val < minValidAmount) {
+        val = minValidAmount;
+      }
+
+      let maxValidAmount = validCoinAmountRange[coin]["max"];
+      if (val > maxValidAmount) {
+        val = maxValidAmount;
+      }
+
+      // call parseFloat to remove the trailing zero
+      val = parseFloat(val.toFixed(validCoinAmountRange[coin]["decimalDigits"]));
+      amountDOM.val(val);
+
+      $(".coin_amount_info").text(val);
     })
 
     $(".input-btn1").click(function(){
@@ -112,16 +315,17 @@ $(function(){
         // setTimeout(function(){
         //     $(".confirm-mock").hide();
         // },2000)
-        $(".loading").show();
+        // $(".loading").show();
     })
 
     //同意合约
     $(".input-checkbox").click(function(){
         if($(this).hasClass("input-checkbox-checked")){
-            $(this).removeClass("input-checkbox-checked")
-        }else{
-            $(this).addClass("input-checkbox-checked")
-        }
+            $(this).removeClass("input-checkbox-checked");
+	}else{
+    	    $(this).addClass("input-checkbox-checked");
+	}
+        validateAllFields();
     })
 
     //复制
@@ -439,8 +643,8 @@ function checkDeposit() {
         }else if(value>100){
             console.log("Accept at most 100")
         }
-    }else if(tpye==="Skycoin"){
-        if(value<10){
+    }else if(type==="Skycoin"){
+        if(value<1){
             console.log("Accept at least 10")
         }else if(value>1000){
             console.log("Accept at most 1000")
