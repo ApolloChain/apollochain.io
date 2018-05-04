@@ -10,7 +10,8 @@ var config = require.main.require('../config');
 var Long = require('mongodb').Long;
 
 var recaptcha = new Recaptcha(config.recaptcha.site_key, config.recaptcha.secret_key, {
-  callback: 'onCaptchaPassed'
+  callback: 'onCaptchaPassed',
+  expired_callback: 'onCaptchaExpired'
 });
 
 router.get('/', function(req, res, next) {

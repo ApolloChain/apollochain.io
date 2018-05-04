@@ -97,17 +97,17 @@ function onListening() {
  * Setup periodical jobs
  */
 
-function onChainUpdated(err, result) {
+function onChainUpdated(type, err, result) {
   if (err)
-    console.error('Error: ' + err);
+    console.error('[' + type + '] Error: ' + err);
 
-  console.log(result);
+  console.log('[' + type + '] ' + result);
 }
 
 function taskRun() {
-  btc_api.update(false /*test*/, onChainUpdated);
-  eth_api.update(false /*test*/, onChainUpdated);
-  sky_api.update(false /*test*/, onChainUpdated);
+  btc_api.update(false /*test*/, function (err, result) { onChainUpdated('btc', err, result); });
+  eth_api.update(false /*test*/, function (err, result) { onChainUpdated('eth', err, result); });
+  sky_api.update(false /*test*/, function (err, result) { onChainUpdated('sky', err, result); });
 }
 
 // Update chain data every 30 seconds

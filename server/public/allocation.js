@@ -1,11 +1,19 @@
 let captchaPassed = false;
 let contractAccepted = false;
 function onCaptchaPassed() {
-	captchaPassed = true;
-	if (captchaPassed && contractAccepted) {
-		$(".submit-btn").removeClass("submit-btn-disabled");
-	}
+    captchaPassed = true;
+    if (captchaPassed && contractAccepted) {
+        $(".submit-btn").removeClass("submit-btn-disabled");
+    }
 }
+
+function onCaptchaExpired() {
+    captchaPassed = false;
+    $(".submit-btn").addClass("submit-btn-disabled");
+}
+
+let coinSendCountdownIntervalHandler;
+let coinSendCountdownStopTime;
 
 $(function(){
     var transactionId;
@@ -58,12 +66,16 @@ $(function(){
         var iptStr = "Enter amount in ";
         $(nameStr).show();
         $(slStr).show();
+        var coinName;
         if($(this).index() == 0){
             iptStr += 'BTC';
+            coinName = "Bitcoin";
         }else if($(this).index() == 1){
             iptStr += 'ETH';
+            coinName = "Etherum";
         }else if($(this).index() == 2){
             iptStr += 'SKY';
+            coinName = "Skycoin";
         }
         currentSelect = selectEnum[$(this).index()];
         $(".enterIpt").attr('placeholder',iptStr)
@@ -74,6 +86,8 @@ $(function(){
         }else{
             $(".enterIpt").hide();
         }
+
+	$(".coin_name_info").text(coinName);
     })
 
     $(".dw-btn").click(function(){
@@ -195,6 +209,23 @@ $(function(){
             s4 = $(".enterIpt4").val();
 
         if(s && s1 && s2 && s3 && s4){
+            $(".coin_send_countdown_mins").text(14);
+            $(".coin_send_countdown_secs").text(59);
+            coinSendCountdownStopTime = new Date();
+            coinSendCountdownStopTime = coinSendCountdownStopTime.setMinutes(coinSendCountdownStopTime.getMinutes() + 15);
+
+            coinSendCountdownIntervalHandler = setInterval(function(){
+                var leftSeconds = (coinSendCountdownStopTime - new Date()) / 1000;
+                if (leftSeconds >= 0) {
+                    $(".coin_send_countdown_mins").text(Math.floor(leftSeconds / 60));
+                    $(".coin_send_countdown_secs").text(Math.floor(leftSeconds % 60));
+                } else {
+                    $(".coin_send_countdown_mins").text(0);
+                    $(".coin_send_countdown_secs").text(0);
+		    clearInterval(coinSendCountdownIntervalHandler);
+		}
+	    }, 1000);
+
             $(".page-next").show();
             $(".page-prev").hide();
         }else{
@@ -227,25 +258,25 @@ $(function(){
 
       let minValidAmount = validCoinAmountRange[coin]["min"];
       if (isNaN(val)) {
-        amountDOM.val(minValidAmount);
-        return;
+        val = minValidAmount;
       }
 
       val = parseFloat(val);
 
       if (val < minValidAmount) {
-        amountDOM.val(minValidAmount);
-        return;
+        val = minValidAmount;
       }
 
       let maxValidAmount = validCoinAmountRange[coin]["max"];
       if (val > maxValidAmount) {
-        amountDOM.val(maxValidAmount);
-        return;
+        val = maxValidAmount;
       }
 
       // call parseFloat to remove the trailing zero
-      amountDOM.val(parseFloat(val.toFixed(validCoinAmountRange[coin]["decimalDigits"])));
+      val = parseFloat(val.toFixed(validCoinAmountRange[coin]["decimalDigits"]));
+      amountDOM.val(val);
+
+      $(".coin_amount_info").text(val);
     })
 
     $(".input-btn1").click(function(){
@@ -591,7 +622,7 @@ function checkDeposit() {
         }else if(value>100){
             console.log("Accept at most 100")
         }
-    }else if(tpye==="Skycoin"){
+    }else if(type==="Skycoin"){
         if(value<10){
             console.log("Accept at least 10")
         }else if(value>1000){
