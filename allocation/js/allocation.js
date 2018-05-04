@@ -49,7 +49,6 @@ $(function(){
         var iptStr = "Enter amount in ";
         $(nameStr).show();
         $(slStr).show();
-        $(".selectBox").attr("data-selected", $(this).attr("data-type"));
         if($(this).index() == 0){
             iptStr += 'BTC';
         }else if($(this).index() == 1){
@@ -59,6 +58,7 @@ $(function(){
         }
         currentSelect = selectEnum[$(this).index()];
         $(".enterIpt").attr('placeholder',iptStr)
+        $(".selectBox").attr("data-selected", $(this).attr("data-type"));
         if($(".enterIpt").hasClass("displaynone")){
             $(".enterIpt").show();
             $(".selectNext").show();
@@ -70,6 +70,19 @@ $(function(){
     $(".dw-btn").click(function(){
         window.location.href = "http://www.apollochain.io/download.html";
     })
+
+		function validateEmail(email) {
+			var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+			return re.test(String(email).toLowerCase());
+		}
+
+    function validateRequiredField(selector, value) {
+      if (value) {
+        $(selector).removeClass("invalid");
+      } else {
+        $(selector).addClass("invalid");
+      }
+    }
 
     $(".submit-btn").click(function() {
         var coin = $(".selectBox").attr("data-selected");
@@ -105,10 +118,10 @@ $(function(){
 
           transactionId = data.transactionId;
 
-          $("#buy-step2").hide();
-          $("#buy-step3 .success").hide();
-          $("#buy-step3 .waiting").show();
-          $("#buy-step3").show();
+          $(".page-next").hide();
+          $(".page-final .success").hide();
+          $(".page-final .waiting").show();
+          $(".page-final").show();
           setTimeout(checkStatus, 10000);
         })
     })
@@ -117,8 +130,8 @@ $(function(){
         $.get("/allocation/api/transactions/" + transactionId + "/status", function(data, status) {
           if (data && data.status) {
             // success
-            $("#buy-step3 .success").show();
-            $("#buy-step3 .waiting").hide();
+            $(".page-final .success").show();
+            $(".page-final .waiting").hide();
           } else {
             // keep waiting
             setTimeout(checkStatus, 30000);
@@ -137,7 +150,20 @@ $(function(){
             s3 = $(".enterIpt3").val(),
             s4 = $(".enterIpt4").val();
 
-        if(s && s1 && s2 && s3 && s4){
+        validateRequiredField(".enterIpt", s);
+        validateRequiredField(".enterIpt1", s1);
+        validateRequiredField(".enterIpt2", s2);
+        validateRequiredField(".enterIpt3", s3);
+        validateRequiredField(".enterIpt4", s4);
+
+        var emailValid = validateEmail(s4);
+        if (!emailValid){
+          $(".enterIpt4").addClass("invalid");
+        }else{
+          $(".enterIpt4").removeClass("invalid");
+        }
+
+        if(s && s1 && s2 && s3 && s4 && emailValid){
             $(".next-btn").removeClass("next-btn-disabled");
         }else{
             $(".next-btn").addClass("next-btn-disabled");
@@ -157,6 +183,52 @@ $(function(){
         }else{
             $(".next-btn").addClass("next-btn-disabled");
         }
+    })
+
+    const validCoinAmountRange = {
+      "btc":  {
+        "min": 0.1,
+        "max": 10,
+        "decimalDigits": 6
+      },
+      "eth":  {
+        "min": 1,
+        "max": 100,
+        "decimalDigits": 6
+      },
+      "sky":  {
+        "min": 10,
+        "max": 1000,
+        "decimalDigits": 1
+      }
+    }
+
+    $("#amount").change(function() {
+      let amountDOM = $("#amount");
+      let val = amountDOM.val();
+      let coin = $(".selectBox").attr("data-selected");
+
+      let minValidAmount = validCoinAmountRange[coin]["min"];
+      if (isNaN(val)) {
+        amountDOM.val(minValidAmount);
+        return;
+      }
+
+      val = parseFloat(val);
+
+      if (val < minValidAmount) {
+        amountDOM.val(minValidAmount);
+        return;
+      }
+
+      let maxValidAmount = validCoinAmountRange[coin]["max"];
+      if (val > maxValidAmount) {
+        amountDOM.val(maxValidAmount);
+        return;
+      }
+
+      // call parseFloat to remove the trailing zero
+      amountDOM.val(parseFloat(val.toFixed(validCoinAmountRange[coin]["decimalDigits"])));
     })
 
     $(".input-btn1").click(function(){

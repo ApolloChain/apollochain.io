@@ -696,6 +696,9 @@ html,body {
 			outline: none;
 			font-size: 16px;
 		}
+    .Deposit.invalid {
+			border-bottom: 2px solid red;
+    }
 		.next-btn {
 			width:262px;
 			height:60px;
