@@ -271,7 +271,7 @@ $(function(){
         "decimalDigits": 6
       },
       "sky":  {
-        "min": 1,
+        "min": 10,
         "max": 1000,
         "decimalDigits": 1
       }
@@ -644,7 +644,7 @@ function checkDeposit() {
             console.log("Accept at most 100")
         }
     }else if(type==="Skycoin"){
-        if(value<1){
+        if(value<10){
             console.log("Accept at least 10")
         }else if(value>1000){
             console.log("Accept at most 1000")
