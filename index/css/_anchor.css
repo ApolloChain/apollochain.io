@@ -318,10 +318,13 @@ html,body {
 		color: #ECEFF4;
 		text-align: center;
 	}
+	&-btnwrap{
+		display: inline-block;
+	}
 	&-btn{
 		display: inline-block;
-		/*width: 262px;*/
-		padding: 0 54px;
+		width: 262px;
+		/*padding: 0 54px;*/
 		height: 60px;
 		line-height: 60px;
 		/*background: linear-gradient(-45deg, #3464D5 0%, #23C7FA 100%);*/
@@ -331,9 +334,21 @@ html,body {
 		color: #fff;
 		font-size: 12px;
 		text-align: center;
+		font-weight: bold;
 		/*margin: 0 auto;*/
+		float: left;
 		&:hover{
 			color: #fff;
+		}
+		&:nth-child(1){
+			margin-right: 20px;
+		}
+		&-white{
+			background: #fff;
+			color: #323232;
+			&:hover{
+				color: #323232;
+			}
 		}
 	}
 	&-arrow{
@@ -527,11 +542,11 @@ html,body {
 		text-align: center;
 		font-weight: bold;
 		&:nth-child(1){
-			/*float: left;*/
-			margin: 0 auto;
+			float: left;
+			/*margin: 0 auto;*/
 		}
 		&:nth-last-child(1){
-			/*float: right;*/
+			float: right;
 		}
 		&:hover{
 			background: #3A9BFF;
@@ -1322,7 +1337,7 @@ html,body {
 	background-color: #fff;
 	padding-top: 50px;
 	&-title {
-		height:61px; 
+		height:61px;
 		font-size:50px;
 		color:rgba(50,50,50,1);
 		line-height:61px;
@@ -1351,12 +1366,12 @@ html,body {
 			align-self: center;
 			-webkit-align-self:center;
 			width: 463px;
-			h3 {         
+			h3 {
                 font-size:50px;
                 font-family:Lato-Bold;
                 color:rgba(50,50,50,1);
                 line-height:70px;
-                margin-bottom: 30px;  
+                margin-bottom: 30px;
 			}
 			p {
 				font-size:16px;
@@ -1417,10 +1432,10 @@ html,body {
 					font-size: 14px;
 				}
 				&:nth-child(1) {
-					background: url(index_p2.png) no-repeat center center;					
+					background: url(index_p2.png) no-repeat center center;
 				}
 				&:nth-child(2) {
-					background: url(index_p3.png) no-repeat center center;				
+					background: url(index_p3.png) no-repeat center center;
 				}
 				&:nth-child(3) {
 					background: url(index_p4.png) no-repeat center center;
@@ -1490,7 +1505,7 @@ html,body {
 			.sb-right {
 				float: none;
 				margin: 0 auto 30px;
-			}	
+			}
 		}
 	}
 }
