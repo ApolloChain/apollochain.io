@@ -14,6 +14,7 @@ const path = require('path');
 const gulp = require('gulp');
 const postcss = require('gulp-postcss');
 const cssnano = require('gulp-cssnano');
+const rename = require('gulp-rename');
 const scss = require('postcss-scss');
 const minify = require('minify');
 
@@ -51,7 +52,7 @@ gulp.task('watch', () => {
 });
 gulp.task('js:app',() => {
     return gulp.src(['js/allocation.js'])
-        .pipe(gulp.dest('./../dist/'));
+        .pipe(gulp.dest('./../server/public/'));
 })
 gulp.task('build', () => {
     return gulp.src(['css/allocation.css'])
@@ -65,8 +66,11 @@ gulp.task('build', () => {
 });
 gulp.task('ge', ['build','js:app'], () => {
     gulp.src('images/*')
-        .pipe(gulp.dest('./../dist/images'));
+        .pipe(gulp.dest('./../server/public/images'));
 
     gulp.src('allocation.html')
-        .pipe(gulp.dest('./../dist/'));
+        .pipe(rename({
+          extname: '.ejs'
+        }))
+        .pipe(gulp.dest('./../server/views/'));
 })

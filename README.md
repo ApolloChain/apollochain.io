@@ -11,4 +11,11 @@
   npm run pro
 ```
 
-### Publish： Send dist folder to the server
+### Update GeoIP-Lite Database
+```
+node ./server/node_modules/geoip-lite/scripts/updatedb.js
+```
+
+### Publish： Send "server" folder to the server
+
+### Update config.js file and set recaptcha's keys

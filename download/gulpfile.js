@@ -51,7 +51,7 @@ gulp.task('watch', () => {
 });
 gulp.task('js:app',() => {
     return gulp.src(['js/download.js'])
-        .pipe(gulp.dest('./../dist/'));
+        .pipe(gulp.dest('./../server/public/'));
 })
 gulp.task('build', () => {
     return gulp.src(['css/download.css'])
@@ -65,8 +65,8 @@ gulp.task('build', () => {
 });
 gulp.task('ge', ['build','js:app'], () => {
     gulp.src('images/*')
-        .pipe(gulp.dest('./../dist/images'));
+        .pipe(gulp.dest('./../server/public/images'));
 
     gulp.src('download.html')
-        .pipe(gulp.dest('./../dist/'));
+        .pipe(gulp.dest('./../server/public/'));
 })

@@ -992,7 +992,7 @@ html,body {
 		margin: 0 auto 85px;
 		text-align: center;
 		&:after{
-			content: "MEDIAS";
+			content: "MEDIA";
 			display: inline-block;
 			font-size: 50px;
 			font-weight: bold;
