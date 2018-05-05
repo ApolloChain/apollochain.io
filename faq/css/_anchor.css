@@ -556,18 +556,28 @@ html,body {
 		margin: 0 auto;
 		background-color: #fff;
 		padding-top: 30px;
-		
+
 	}
 }
 @media screen and (max-width: 980px) {
     .faq-container {
 		margin: 0 80px;
 		background-color: #fff;
-		padding-top: 30px;	
+		padding-top: 30px;
 		.paragraph {
 			p {
 				line-height: 30px;
 			}
-		}	
+		}
+	}
+}
+.navbar-dark .navbar-nav .nav-link,.navbar-light .navbar-nav .nav-link{
+	span{
+		background: #3A9BFF;
+		height: 22px;
+		padding: 0 10px;
+		line-height: 22px;
+		border-radius: 22px;
+		color: #ffffff;
 	}
 }

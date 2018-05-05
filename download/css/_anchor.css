@@ -525,3 +525,13 @@ html,body {
 .noborder,.main-right-column.noborder{
 	border: 0;
 }
+.navbar-dark .navbar-nav .nav-link,.navbar-light .navbar-nav .nav-link{
+	span{
+		background: #3A9BFF;
+		height: 22px;
+		padding: 0 10px;
+		line-height: 22px;
+		border-radius: 22px;
+		color: #ffffff;
+	}
+}
