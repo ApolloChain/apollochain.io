@@ -402,9 +402,14 @@ html,body {
 				background-image: url(Twitter@2x.png);
 			}
 		}
-		&:nth-last-child(1){
+		&:nth-child(5){
 			a{
 				background-image: url(Instagram@2x.png);
+			}
+		}
+		&:nth-last-child(1){
+			a{
+				background-image: url(github.png);
 			}
 		}
 	}
