@@ -1341,6 +1341,7 @@ html,body {
 	margin: 0 160px;
 	background-color: #fff;
 	padding-top: 50px;
+	text-align: center;
 	&-title {
 		height:61px;
 		font-size:50px;
@@ -1412,8 +1413,9 @@ html,body {
 		}
 	}
 	&-bottom {
-		margin-bottom: 50px;
-		margin-top: 30px;
+		display: inline-block;
+		padding-bottom: 50px;
+		padding-top: 30px;
 		.sb-left {
 			float: left;
 			width: 772px;
