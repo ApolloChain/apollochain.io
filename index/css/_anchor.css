@@ -989,6 +989,9 @@ html,body {
 	&-icon3{
 		background-image: url(lightwing.jpeg);
 	}
+	&-icon4{
+		background-image: url(harryhong.jpeg);
+	}
 }
 .medias{
 	background-color: #fff;
