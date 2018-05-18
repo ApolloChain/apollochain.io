@@ -868,6 +868,9 @@ html,body {
 	&-icon4{
 		background-image: url(roman@2x.png);
 	}
+	&-icon5{
+		background-image: url(huadong.jpeg);
+	}
 	&-special{
 		text-align: center;
 	}
@@ -991,6 +994,9 @@ html,body {
 	}
 	&-icon4{
 		background-image: url(harryhong.jpeg);
+	}
+	&-icon5{
+		background-image: url(yincao.jpeg);
 	}
 }
 .medias{
