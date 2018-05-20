@@ -948,6 +948,9 @@ html,body {
 	.team-link{
 		display: block;
 	}
+	.team-desc{
+		line-height: 26px;
+	}
 	.linkedin{
 		width: 24px;
 		height: 24px;
