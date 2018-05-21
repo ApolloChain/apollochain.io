@@ -569,7 +569,7 @@ html,body {
 	&-pic{
 		width: 1160px;
 		height: 403px;
-		background: url(flow@2x.png) no-repeat center center;
+		background: url(flow.png) no-repeat center center;
 		background-size: cover;
 		margin: 25px auto 0;
 	}
@@ -676,19 +676,19 @@ html,body {
 		background-position: center center;
 		background-size: contain;
 		&:nth-child(1){
-			background-image: url(2018q1@2x.png);
+			background-image: url(2018q1.png);
 		}
 		&:nth-child(2){
-			background-image: url(2018q2@2x.png);
+			background-image: url(2018q2.png);
 		}
 		&:nth-child(3){
-			background-image: url(2018q3@2x.png);
+			background-image: url(2018q3.png);
 		}
 		&:nth-child(4){
-			background-image: url(2019Q3@2x.png);
+			background-image: url(2019Q3.png);
 		}
 		&:nth-child(5){
-			background-image: url(2019Q4@2x.png);
+			background-image: url(2019Q4.png);
 		}
 	}
 }
