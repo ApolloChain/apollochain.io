@@ -1211,6 +1211,14 @@ html,body {
 		background: url(Group12@2x.png) no-repeat center center;
 		background-size: 100% 100%;
 	}
+	&-logo5{
+		display: block;
+		width: 116px;
+		height: 120px;
+		margin: 0 auto 35px;
+		background: url(unisun.png) no-repeat center center;
+		background-size: 100% 100%;
+	}
 	&-p2{
 		font-size: 14px;
 		color: #949494;
